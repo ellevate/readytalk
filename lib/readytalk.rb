@@ -1,3 +1,8 @@
+require 'rest-client'
+require 'base64'
+require 'readytalk/railtie'
+require 'readytalk/api/operations'
+
 module ReadyTalk
   if defined?(Rails)
     def self.configure(&block)
@@ -13,7 +18,7 @@ module ReadyTalk
     end
   else
     def self.config
-      @@config ||= OpenStruct.new(api_key: nil)
+      @@config ||= OpenStruct.new
       @@config
     end
   end
