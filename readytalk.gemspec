@@ -8,5 +8,7 @@ Gem::Specification.new do |s|
   s.license = 'MIT'
 
   s.add_dependency('rest-client', '~> 1.4')
+  s.add_dependency('json', '~> 1.8')
+
   s.files = `git ls-files`.split("\n")
 end

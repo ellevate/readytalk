@@ -13,21 +13,31 @@ module ReadyTalk
         request(:put, path, params)
       end
 
+      def delete(path, params = {})
+        request(:delete, path, params)
+      end
+
       private
       def request(verb, path, params)
         opts = {
           method: verb,
           url: url(path),
           headers: {
-            params: params,
             Authorization: authorization
           }
         }
+        if verb == :post
+          opts[:payload] = params
+        else
+          opts[:headers][:params] = params
+        end
+
         RestClient::Request.execute(opts)
       end
 
       def url(path)
-        "https://cc.readytalk.com#{path}.json"
+        domain = ReadyTalk.config.test_mode ? "apidev-cc.readytalk.com" : "cc.readytalk.com"
+        "https://#{domain}/api/1.3/svc/rs#{path}.json"
       end
 
       def authorization
