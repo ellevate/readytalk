@@ -1,54 +1,63 @@
 module ReadyTalk
-  class Meeting < ReadyTalk::API::Object
+  class Meeting < ReadyTalkObject
 
     def self.create(opts = {})
-      self.new(post('/meetings', process_opts(opts)), ['createMeetingsResult', 'meeting'])
+      response = request(:post, '/meetings', opts, :create_meeting)
+      self.new(response, :meeting)
     end
 
     def self.list(opts = {})
-      response = get('/meetings', process_opts(opts))
-      ReadyTalk::API::List.new(response, Meeting, ['listMeetingsResult', 'meeting'])
+      response = request(:get, '/meetings', opts, :list_meetings)
+      Util.new_list_object(response, :meeting, :paging_criteria)
     end
 
     def self.details(id)
-      new(get("/meetings/#{id}"), ['meetingDetailsResult', 'meeting'])
-    end
-
-    def cancel(opts = {})
-      Raise 'Method not yet implemented'
-      # self.class.delete("/meetings/#{id}", self.class.process_opts(opts))
-    end
-
-    def update(opts = {})
-      Raise 'Method not yet implemented'
-      # self.class.put("/meetings/#{id}", self.class.process_opts(opts))
+      response = request(:get, "/meetings/#{id}", :meeting_details)
+      self.new(response, :meeting)
     end
 
     def details
-      response = self.class.get("/meetings/#{self.id}")
-      Registration.new(response, ['meetingDetailsResult', 'meeting'])
+      self.class.details(self.id)
+    end
+
+    def cancel(opts = {})
+      response = request(:delete, "/meetings/#{id}", opts, :cancel_meeting)
+      Util.parameterize_hash(response)
+    end
+
+    def update(opts = {})
+      response = request(:put, "/meetings/#{id}", opts, :update_meeting)
+      update_data(response, :meeting)
     end
 
     def create_registration(opts = {})
       opts = opts.merge(meeting_id: self.id)
-      response = self.class.post('/registrations', self.class.process_opts(opts))
-      Registration.new(response, ['createRegistrationResult', 'meeting'])
+      response = request(:post, '/registrations', opts, :create_registration)
+      Util.new_helper_object(response, :registration)
+    end
+
+    def create_invitations(opts = {})
+      opts = opts.merge(meeting_id: self.id)
+      opts[:email] = opts.fetch(:email, []).join(',')
+      response = request(:post, '/invites', opts, :create_invitations)
+      Util.new_list_object(response, :invite, :opt_out_email)
     end
 
     def list_registrations(opts = {})
       opts = opts.merge(meeting_id: self.id)
-      response = self.class.get('/registrations', self.class.process_opts(opts))
-      ReadyTalk::API::List.new(response, Registration, ['listRegistrationsResult', 'registration'])
-    end
-
-    def list_questions(opts = {})
-      opts = opts.merge(meeting_id: self.id)
-      self.class.get('/registrations/pollQuestions', self.class.process_opts(opts))
+      response = request(:get, '/registrations', opts, :list_registrations)
+      Util.new_list_object(response, :registration, :paging_criteria)
     end
 
     def list_surveys(opts = {})
       opts = opts.merge(meeting_id: self.id)
-      self.class.get('/registrations/surveys', self.class.process_opts(opts))
+      response = request(:get, '/registrations/surveys', opts, :list_post_event_surveys)
+      Util.new_list_object(response, :survey, :paging_criteria, :custom_link)
+    end
+
+    def list_chats
+      response = request(:get, '/chats', {id: self.id}, :list_chats)
+      Util.new_list_object(response, :chat)
     end
 
   end

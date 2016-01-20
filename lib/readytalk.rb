@@ -1,15 +1,18 @@
-require 'rest-client'
 require 'base64'
 require 'json'
+require 'rest-client'
 
 require 'readytalk/railtie'
+require 'readytalk/operations'
 require 'readytalk/util'
-require 'readytalk/api/operations'
-require 'readytalk/api/object'
-require 'readytalk/api/list'
+require 'readytalk/object'
+require 'readytalk/list'
 
+require 'readytalk/account'
+require 'readytalk/error'
 require 'readytalk/meeting'
-require 'readytalk/registration'
+require 'readytalk/recording'
+
 
 module ReadyTalk
   if defined?(Rails)
