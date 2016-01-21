@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'readytalk'
-  s.version = '0.5.0'
+  s.version = '0.6.0'
   s.date = '2016-01-19'
   s.summary = "Ruby binding for the ReadyTalk API"
   s.description = "Ruby binding for the ReadyTalk - A web conferencing platform."

@@ -1,8 +1,8 @@
 module ReadyTalk
   class Account < ReadyTalkObject
 
-    def self.get_option(option)
-      response = request(:get, "/accounts/option/#{option}", :get_account_option)
+    def self.get_option(option_name)
+      response = request(:get, "/accounts/option/#{option_name}", :get_account_option)
       Util.new_helper_object(response, :option)
     end
 

@@ -6,8 +6,12 @@ module ReadyTalk
       @errors = errors_data['error'] || []
     end
 
+    def full_messages
+      @errors.map { |e| e['message'] }
+    end
+
     def to_s
-      "#{@errors.size} error(s): [#{@errors.map { |e| "#{e['code']}: #{e['message']}" }}]"
+      "#{@errors.size} error(s): #{@errors.map { |e| "#{e['code']}: #{e['message']}" }}"
     end
 
   end
