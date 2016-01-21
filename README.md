@@ -115,3 +115,7 @@ via the `errors` method on `ReadyTalk::ReadyTalkError`.
 
 Additionally, the `full_messages` method will return an Array containing the messages
 for each error.
+
+## TODO/Coming Soon
+Tests will be coming very shortly. I also plan on developing a mock webhook for
+use in external projects.
